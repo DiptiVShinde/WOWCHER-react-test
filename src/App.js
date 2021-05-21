@@ -20,8 +20,6 @@ function App() {
   }, []);
 
   async function fetchProducts() {
-    console.log("fetch");
-
     try {
       let result = await Promise.all([
         callGetApi(`api/branch1.json`),
@@ -31,27 +29,22 @@ function App() {
 
       //combine individual api result into one list
       result = result.reduce((accumulator, item) => {
-        //   console.log('inside', accumulator, item);
         return [...accumulator, ...(item.products ? item.products : [])];
       }, []);
 
       //remove duplicate products
       result = removeDuplicateProducts(result);
       setProducts(result);
-      console.log("onFetch", result.length);
     } catch (error) {
       setError(error);
     }
   }
 
-  //   function handleInputChange(value){
+  //Filter products according to search-input
   const searchProducts = products?.filter((product) => {
     const result = getSearchProduct(searchInput, product.name);
     return result;
   });
-  // setProducts(searchProducts);
-  console.log("product search", searchProducts);
-  // };
   return (
     <div className="product-list">
       <label>Search Products</label>
@@ -100,7 +93,7 @@ function App() {
       ) : (
         //no. of products is 0
         <div className="data-not-found">
-          <p>Found no products</p>
+          <p>No product found.</p>
         </div>
       )}
     </div>
